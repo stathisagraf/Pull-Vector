@@ -1,0 +1,58 @@
+import uproot
+import numpy as np
+import matplotlib.pyplot as plt
+import vector
+import awkward as ak
+
+#vbf data
+
+data1=uproot.open('perfNano_VBFHInv_PU200.l1ctlayer1.root')
+br=data1['Events']['nGenJets'].arrays()
+nonzero=br['nGenJets']>0
+multimuon=br['nGenJets']>1
+branches1=data1['Events']['GenJets_pt'].arrays()
+etas1=data1['Events']['GenJets_eta'].arrays()
+
+gen_jets_pt1=branches1['GenJets_pt'][multimuon]
+eta1=etas1['GenJets_eta'][multimuon]
+
+a1=ak.argsort(gen_jets_pt1,ascending=False)
+
+mask1=a1==0
+mask2=a1==1
+
+
+leading1=ak.flatten(eta1[mask1])
+subleading1=ak.flatten(eta1[mask2])
+plt.hist([leading1,subleading1],100,histtype='step',label=['vbf leading','vbf subleading'])
+
+#single neutrino data
+
+data2=uproot.open('perfNano_SingleNeutrino_PU200.l1ctlayer1.root')
+br2=data2['Events']['nGenJets'].arrays()
+nonzero2=br2['nGenJets']>0
+multimuon2=br2['nGenJets']>1
+branches2=data2['Events']['GenJets_pt'].arrays()
+etas2=data2['Events']['GenJets_eta'].arrays()
+
+gen_jets_pt2=branches2['GenJets_pt'][multimuon2]
+eta2=etas2['GenJets_eta'][multimuon2]
+a2=ak.argsort(gen_jets_pt2,ascending=False)
+
+mask3=a2==0
+mask4=a2==1
+
+
+leading2=ak.flatten(eta2[mask3])
+subleading2=ak.flatten(eta2[mask4])
+plt.hist([leading2,subleading2],100,histtype='step',label=[' single neutrino leading','single neutrino subleading'])
+
+plt.xlabel('$\eta$')
+
+plt.title('Leading and subleading jet η')
+plt.legend(loc='lower center')
+plt.xticks(np.linspace(-5,5,11))
+plt.grid()
+
+plt.savefig('four.png', dpi=1200)
+plt.show()
