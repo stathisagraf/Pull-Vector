@@ -1,0 +1,705 @@
+import numpy as np
+import uproot
+import awkward as ak
+import matplotlib.pyplot as plt
+import time
+import vector
+import numpy.ma as ma
+import concurrent.futures
+start=time.perf_counter()
+#imports 
+vbf_data=uproot.open('perfNano_VBFHInv_PU200.l1ctlayer1.root')
+
+#jet values
+
+#number of jets
+number_jets=vbf_data['Events']['nGenJets'].arrays()
+n_jets=number_jets['nGenJets']
+
+#Distinguish events with at least one jet
+nonzero=number_jets['nGenJets']>1
+
+#jet pt
+jet_transverse_momenta=vbf_data['Events']['GenJets_pt'].arrays()
+jet_pts=jet_transverse_momenta['GenJets_pt'][nonzero]
+
+#Finding the leading jet
+sort=ak.argsort(jet_pts,ascending=False)
+leading=sort==1
+subleading=sort==0
+jet_pt=jet_pts[leading]
+jet_s_pt=jet_pts[subleading]
+jet_pt_mask1=jet_pt.to_numpy()>20
+jet_pt_mask2=jet_s_pt.to_numpy()<30
+filters=jet_pt_mask1*jet_pt_mask2
+
+#jet  eta
+jet_etas=vbf_data['Events']['GenJets_eta'].arrays()
+jet_eta=jet_etas['GenJets_eta'][nonzero][leading]
+
+#jet phi
+jet_phis=vbf_data['Events']['GenJets_phi'].arrays()
+jet_phi=jet_phis['GenJets_phi'][nonzero][leading]
+
+#jet mass
+jet_masss=vbf_data['Events']['GenJets_mass'].arrays()
+jet_mass=jet_masss['GenJets_mass'][nonzero][leading]
+
+#daughter particle values
+
+#daughter pt
+
+#%%
+dau_pt=[]
+
+dau0_transverse_momenta=vbf_data['Events']['GenJets_dau0_pt'].arrays()
+dau_pt.append(dau0_transverse_momenta['GenJets_dau0_pt'][nonzero][leading]
+)
+
+dau1_transverse_momenta=vbf_data['Events']['GenJets_dau1_pt'].arrays()
+dau_pt.append(dau1_transverse_momenta['GenJets_dau1_pt'][nonzero][leading]
+)
+
+dau2_transverse_momenta=vbf_data['Events']['GenJets_dau2_pt'].arrays()
+dau_pt.append(dau2_transverse_momenta['GenJets_dau2_pt'][nonzero][leading]
+)
+
+dau3_transverse_momenta=vbf_data['Events']['GenJets_dau3_pt'].arrays()
+dau_pt.append(dau3_transverse_momenta['GenJets_dau3_pt'][nonzero][leading]
+)
+
+dau4_transverse_momenta=vbf_data['Events']['GenJets_dau4_pt'].arrays()
+dau_pt.append(dau4_transverse_momenta['GenJets_dau4_pt'][nonzero][leading]
+)
+
+dau5_transverse_momenta=vbf_data['Events']['GenJets_dau5_pt'].arrays()
+dau_pt.append(dau5_transverse_momenta['GenJets_dau5_pt'][nonzero][leading]
+)
+
+dau6_transverse_momenta=vbf_data['Events']['GenJets_dau6_pt'].arrays()
+dau_pt.append(dau6_transverse_momenta['GenJets_dau6_pt'][nonzero][leading]
+)
+
+dau7_transverse_momenta=vbf_data['Events']['GenJets_dau7_pt'].arrays()
+dau_pt.append(dau7_transverse_momenta['GenJets_dau7_pt'][nonzero][leading]
+)
+
+dau8_transverse_momenta=vbf_data['Events']['GenJets_dau8_pt'].arrays()
+dau_pt.append(dau8_transverse_momenta['GenJets_dau8_pt'][nonzero][leading]
+)
+
+dau9_transverse_momenta=vbf_data['Events']['GenJets_dau9_pt'].arrays()
+dau_pt.append(dau9_transverse_momenta['GenJets_dau9_pt'][nonzero][leading]
+)
+
+dau10_transverse_momenta=vbf_data['Events']['GenJets_dau10_pt'].arrays()
+dau_pt.append(dau10_transverse_momenta['GenJets_dau10_pt'][nonzero][leading]
+)
+
+dau11_transverse_momenta=vbf_data['Events']['GenJets_dau11_pt'].arrays()
+dau_pt.append(dau11_transverse_momenta['GenJets_dau11_pt'][nonzero][leading]
+)
+
+dau12_transverse_momenta=vbf_data['Events']['GenJets_dau12_pt'].arrays()
+dau_pt.append(dau12_transverse_momenta['GenJets_dau12_pt'][nonzero][leading]
+)
+
+dau13_transverse_momenta=vbf_data['Events']['GenJets_dau13_pt'].arrays()
+dau_pt.append(dau13_transverse_momenta['GenJets_dau13_pt'][nonzero][leading]
+)
+
+dau14_transverse_momenta=vbf_data['Events']['GenJets_dau14_pt'].arrays()
+dau_pt.append(dau14_transverse_momenta['GenJets_dau14_pt'][nonzero][leading]
+)
+
+dau15_transverse_momenta=vbf_data['Events']['GenJets_dau15_pt'].arrays()
+dau_pt.append(dau15_transverse_momenta['GenJets_dau15_pt'][nonzero][leading]
+)
+
+dau16_transverse_momenta=vbf_data['Events']['GenJets_dau16_pt'].arrays()
+dau_pt.append(dau16_transverse_momenta['GenJets_dau16_pt'][nonzero][leading]
+)
+
+dau17_transverse_momenta=vbf_data['Events']['GenJets_dau17_pt'].arrays()
+dau_pt.append(dau17_transverse_momenta['GenJets_dau17_pt'][nonzero][leading]
+)
+
+dau18_transverse_momenta=vbf_data['Events']['GenJets_dau18_pt'].arrays()
+dau_pt.append(dau18_transverse_momenta['GenJets_dau18_pt'][nonzero][leading]
+)
+
+dau19_transverse_momenta=vbf_data['Events']['GenJets_dau19_pt'].arrays()
+dau_pt.append(dau19_transverse_momenta['GenJets_dau19_pt'][nonzero][leading]
+)
+
+dau20_transverse_momenta=vbf_data['Events']['GenJets_dau20_pt'].arrays()
+dau_pt.append(dau20_transverse_momenta['GenJets_dau20_pt'][nonzero][leading]
+)
+
+dau21_transverse_momenta=vbf_data['Events']['GenJets_dau21_pt'].arrays()
+dau_pt.append(dau21_transverse_momenta['GenJets_dau21_pt'][nonzero][leading]
+)
+
+dau22_transverse_momenta=vbf_data['Events']['GenJets_dau22_pt'].arrays()
+dau_pt.append(dau22_transverse_momenta['GenJets_dau22_pt'][nonzero][leading]
+)
+
+dau23_transverse_momenta=vbf_data['Events']['GenJets_dau23_pt'].arrays()
+dau_pt.append(dau23_transverse_momenta['GenJets_dau23_pt'][nonzero][leading]
+)
+
+dau24_transverse_momenta=vbf_data['Events']['GenJets_dau24_pt'].arrays()
+dau_pt.append(dau24_transverse_momenta['GenJets_dau24_pt'][nonzero][leading]
+)
+
+dau25_transverse_momenta=vbf_data['Events']['GenJets_dau25_pt'].arrays()
+dau_pt.append(dau25_transverse_momenta['GenJets_dau25_pt'][nonzero][leading]
+)
+
+dau26_transverse_momenta=vbf_data['Events']['GenJets_dau26_pt'].arrays()
+dau_pt.append(dau26_transverse_momenta['GenJets_dau26_pt'][nonzero][leading]
+)
+
+dau27_transverse_momenta=vbf_data['Events']['GenJets_dau27_pt'].arrays()
+dau_pt.append(dau27_transverse_momenta['GenJets_dau27_pt'][nonzero][leading]
+)
+
+dau28_transverse_momenta=vbf_data['Events']['GenJets_dau28_pt'].arrays()
+dau_pt.append(dau28_transverse_momenta['GenJets_dau28_pt'][nonzero][leading]
+)
+
+dau29_transverse_momenta=vbf_data['Events']['GenJets_dau29_pt'].arrays()
+dau_pt.append(dau29_transverse_momenta['GenJets_dau29_pt'][nonzero][leading]
+)
+
+dau30_transverse_momenta=vbf_data['Events']['GenJets_dau30_pt'].arrays()
+dau_pt.append(dau30_transverse_momenta['GenJets_dau30_pt'][nonzero][leading]
+)
+
+dau31_transverse_momenta=vbf_data['Events']['GenJets_dau31_pt'].arrays()
+dau_pt.append(dau31_transverse_momenta['GenJets_dau31_pt'][nonzero][leading]
+)
+
+
+#daughter eta
+
+dau_eta=[]
+
+dau0_etas=vbf_data['Events']['GenJets_dau0_eta'].arrays()
+dau_eta.append(dau0_etas['GenJets_dau0_eta'][nonzero][leading]
+)
+
+dau1_etas=vbf_data['Events']['GenJets_dau1_eta'].arrays()
+dau_eta.append(dau1_etas['GenJets_dau1_eta'][nonzero][leading]
+)
+
+dau2_etas=vbf_data['Events']['GenJets_dau2_eta'].arrays()
+dau_eta.append(dau2_etas['GenJets_dau2_eta'][nonzero][leading]
+)
+
+dau3_etas=vbf_data['Events']['GenJets_dau3_eta'].arrays()
+dau_eta.append(dau3_etas['GenJets_dau3_eta'][nonzero][leading]
+)
+
+dau4_etas=vbf_data['Events']['GenJets_dau4_eta'].arrays()
+dau_eta.append(dau4_etas['GenJets_dau4_eta'][nonzero][leading]
+)
+
+dau5_etas=vbf_data['Events']['GenJets_dau5_eta'].arrays()
+dau_eta.append(dau5_etas['GenJets_dau5_eta'][nonzero][leading]
+)
+
+dau6_etas=vbf_data['Events']['GenJets_dau6_eta'].arrays()
+dau_eta.append(dau6_etas['GenJets_dau6_eta'][nonzero][leading]
+)
+
+dau7_etas=vbf_data['Events']['GenJets_dau7_eta'].arrays()
+dau_eta.append(dau7_etas['GenJets_dau7_eta'][nonzero][leading]
+)
+
+dau8_etas=vbf_data['Events']['GenJets_dau8_eta'].arrays()
+dau_eta.append(dau8_etas['GenJets_dau8_eta'][nonzero][leading]
+)
+
+dau9_etas=vbf_data['Events']['GenJets_dau9_eta'].arrays()
+dau_eta.append(dau9_etas['GenJets_dau9_eta'][nonzero][leading]
+)
+
+dau10_etas=vbf_data['Events']['GenJets_dau10_eta'].arrays()
+dau_eta.append(dau10_etas['GenJets_dau10_eta'][nonzero][leading]
+)
+
+dau11_etas=vbf_data['Events']['GenJets_dau11_eta'].arrays()
+dau_eta.append(dau11_etas['GenJets_dau11_eta'][nonzero][leading]
+)
+
+dau12_etas=vbf_data['Events']['GenJets_dau12_eta'].arrays()
+dau_eta.append(dau12_etas['GenJets_dau12_eta'][nonzero][leading]
+)
+
+dau13_etas=vbf_data['Events']['GenJets_dau13_eta'].arrays()
+dau_eta.append(dau13_etas['GenJets_dau13_eta'][nonzero][leading]
+)
+
+dau14_etas=vbf_data['Events']['GenJets_dau14_eta'].arrays()
+dau_eta.append(dau14_etas['GenJets_dau14_eta'][nonzero][leading]
+)
+
+dau15_etas=vbf_data['Events']['GenJets_dau15_eta'].arrays()
+dau_eta.append(dau15_etas['GenJets_dau15_eta'][nonzero][leading]
+)
+
+dau16_etas=vbf_data['Events']['GenJets_dau16_eta'].arrays()
+dau_eta.append(dau16_etas['GenJets_dau16_eta'][nonzero][leading]
+)
+
+dau17_etas=vbf_data['Events']['GenJets_dau17_eta'].arrays()
+dau_eta.append(dau17_etas['GenJets_dau17_eta'][nonzero][leading]
+)
+
+dau18_etas=vbf_data['Events']['GenJets_dau18_eta'].arrays()
+dau_eta.append(dau18_etas['GenJets_dau18_eta'][nonzero][leading]
+)
+
+dau19_etas=vbf_data['Events']['GenJets_dau19_eta'].arrays()
+dau_eta.append(dau19_etas['GenJets_dau19_eta'][nonzero][leading]
+)
+
+dau20_etas=vbf_data['Events']['GenJets_dau20_eta'].arrays()
+dau_eta.append(dau20_etas['GenJets_dau20_eta'][nonzero][leading]
+)
+
+dau21_etas=vbf_data['Events']['GenJets_dau21_eta'].arrays()
+dau_eta.append(dau21_etas['GenJets_dau21_eta'][nonzero][leading]
+)
+
+dau22_etas=vbf_data['Events']['GenJets_dau22_eta'].arrays()
+dau_eta.append(dau22_etas['GenJets_dau22_eta'][nonzero][leading]
+)
+
+dau23_etas=vbf_data['Events']['GenJets_dau23_eta'].arrays()
+dau_eta.append(dau23_etas['GenJets_dau23_eta'][nonzero][leading]
+)
+
+dau24_etas=vbf_data['Events']['GenJets_dau24_eta'].arrays()
+dau_eta.append(dau24_etas['GenJets_dau24_eta'][nonzero][leading]
+)
+
+dau25_etas=vbf_data['Events']['GenJets_dau25_eta'].arrays()
+dau_eta.append(dau25_etas['GenJets_dau25_eta'][nonzero][leading]
+)
+
+dau26_etas=vbf_data['Events']['GenJets_dau26_eta'].arrays()
+dau_eta.append(dau26_etas['GenJets_dau26_eta'][nonzero][leading]
+)
+
+dau27_etas=vbf_data['Events']['GenJets_dau27_eta'].arrays()
+dau_eta.append(dau27_etas['GenJets_dau27_eta'][nonzero][leading]
+)
+
+dau28_etas=vbf_data['Events']['GenJets_dau28_eta'].arrays()
+dau_eta.append(dau28_etas['GenJets_dau28_eta'][nonzero][leading]
+)
+
+dau29_etas=vbf_data['Events']['GenJets_dau29_eta'].arrays()
+dau_eta.append(dau29_etas['GenJets_dau29_eta'][nonzero][leading]
+)
+
+dau30_etas=vbf_data['Events']['GenJets_dau30_eta'].arrays()
+dau_eta.append(dau30_etas['GenJets_dau30_eta'][nonzero][leading]
+)
+
+dau31_etas=vbf_data['Events']['GenJets_dau31_eta'].arrays()
+dau_eta.append(dau31_etas['GenJets_dau31_eta'][nonzero][leading]
+)
+
+
+#daughter phi
+
+dau_phi=[]
+
+dau0_phis=vbf_data['Events']['GenJets_dau0_phi'].arrays()
+dau_phi.append(dau0_phis['GenJets_dau0_phi'][nonzero][leading])
+
+
+dau1_phis=vbf_data['Events']['GenJets_dau1_phi'].arrays()
+dau_phi.append(dau1_phis['GenJets_dau1_phi'][nonzero][leading]
+)
+
+dau2_phis=vbf_data['Events']['GenJets_dau2_phi'].arrays()
+dau_phi.append(dau2_phis['GenJets_dau2_phi'][nonzero][leading]
+)
+
+dau3_phis=vbf_data['Events']['GenJets_dau3_phi'].arrays()
+dau_phi.append(dau3_phis['GenJets_dau3_phi'][nonzero][leading]
+)
+
+dau4_phis=vbf_data['Events']['GenJets_dau4_phi'].arrays()
+dau_phi.append(dau4_phis['GenJets_dau4_phi'][nonzero][leading]
+)
+
+dau5_phis=vbf_data['Events']['GenJets_dau5_phi'].arrays()
+dau_phi.append(dau5_phis['GenJets_dau5_phi'][nonzero][leading]
+)
+
+dau6_phis=vbf_data['Events']['GenJets_dau6_phi'].arrays()
+dau_phi.append(dau6_phis['GenJets_dau6_phi'][nonzero][leading]
+)
+
+dau7_phis=vbf_data['Events']['GenJets_dau7_phi'].arrays()
+dau_phi.append(dau7_phis['GenJets_dau7_phi'][nonzero][leading]
+)
+
+dau8_phis=vbf_data['Events']['GenJets_dau8_phi'].arrays()
+dau_phi.append(dau8_phis['GenJets_dau8_phi'][nonzero][leading]
+)
+
+dau9_phis=vbf_data['Events']['GenJets_dau9_phi'].arrays()
+dau_phi.append(dau9_phis['GenJets_dau9_phi'][nonzero][leading]
+)
+
+dau10_phis=vbf_data['Events']['GenJets_dau10_phi'].arrays()
+dau_phi.append(dau10_phis['GenJets_dau10_phi'][nonzero][leading]
+)
+
+dau11_phis=vbf_data['Events']['GenJets_dau11_phi'].arrays()
+dau_phi.append(dau11_phis['GenJets_dau11_phi'][nonzero][leading]
+)
+
+dau12_phis=vbf_data['Events']['GenJets_dau12_phi'].arrays()
+dau_phi.append(dau12_phis['GenJets_dau12_phi'][nonzero][leading]
+)
+
+dau13_phis=vbf_data['Events']['GenJets_dau13_phi'].arrays()
+dau_phi.append(dau13_phis['GenJets_dau13_phi'][nonzero][leading]
+)
+
+dau14_phis=vbf_data['Events']['GenJets_dau14_phi'].arrays()
+dau_phi.append(dau14_phis['GenJets_dau14_phi'][nonzero][leading]
+)
+
+dau15_phis=vbf_data['Events']['GenJets_dau15_phi'].arrays()
+dau_phi.append(dau15_phis['GenJets_dau15_phi'][nonzero][leading]
+)
+
+dau16_phis=vbf_data['Events']['GenJets_dau16_phi'].arrays()
+dau_phi.append(dau16_phis['GenJets_dau16_phi'][nonzero][leading]
+)
+
+dau17_phis=vbf_data['Events']['GenJets_dau17_phi'].arrays()
+dau_phi.append(dau17_phis['GenJets_dau17_phi'][nonzero][leading]
+)
+
+dau18_phis=vbf_data['Events']['GenJets_dau18_phi'].arrays()
+dau_phi.append(dau18_phis['GenJets_dau18_phi'][nonzero][leading]
+)
+
+dau19_phis=vbf_data['Events']['GenJets_dau19_phi'].arrays()
+dau_phi.append(dau19_phis['GenJets_dau19_phi'][nonzero][leading]
+)
+
+dau20_phis=vbf_data['Events']['GenJets_dau20_phi'].arrays()
+dau_phi.append(dau20_phis['GenJets_dau20_phi'][nonzero][leading]
+)
+
+dau21_phis=vbf_data['Events']['GenJets_dau21_phi'].arrays()
+dau_phi.append(dau21_phis['GenJets_dau21_phi'][nonzero][leading]
+)
+
+dau22_phis=vbf_data['Events']['GenJets_dau22_phi'].arrays()
+dau_phi.append(dau22_phis['GenJets_dau22_phi'][nonzero][leading]
+)
+
+dau23_phis=vbf_data['Events']['GenJets_dau23_phi'].arrays()
+dau_phi.append(dau23_phis['GenJets_dau23_phi'][nonzero][leading]
+)
+
+dau24_phis=vbf_data['Events']['GenJets_dau24_phi'].arrays()
+dau_phi.append(dau24_phis['GenJets_dau24_phi'][nonzero][leading]
+)
+
+dau25_phis=vbf_data['Events']['GenJets_dau25_phi'].arrays()
+dau_phi.append(dau25_phis['GenJets_dau25_phi'][nonzero][leading]
+)
+
+dau26_phis=vbf_data['Events']['GenJets_dau26_phi'].arrays()
+dau_phi.append(dau26_phis['GenJets_dau26_phi'][nonzero][leading]
+)
+
+dau27_phis=vbf_data['Events']['GenJets_dau27_phi'].arrays()
+dau_phi.append(dau27_phis['GenJets_dau27_phi'][nonzero][leading]
+)
+
+dau28_phis=vbf_data['Events']['GenJets_dau28_phi'].arrays()
+dau_phi.append(dau28_phis['GenJets_dau28_phi'][nonzero][leading]
+)
+
+dau29_phis=vbf_data['Events']['GenJets_dau29_phi'].arrays()
+dau_phi.append(dau29_phis['GenJets_dau29_phi'][nonzero][leading]
+)
+
+dau30_phis=vbf_data['Events']['GenJets_dau30_phi'].arrays()
+dau_phi.append(dau30_phis['GenJets_dau30_phi'][nonzero][leading]
+)
+
+dau31_phis=vbf_data['Events']['GenJets_dau31_phi'].arrays()
+dau_phi.append(dau31_phis['GenJets_dau31_phi'][nonzero][leading]
+)
+
+#daughter mass
+
+dau_mass=[]
+
+dau0_masss=vbf_data['Events']['GenJets_dau0_mass'].arrays()
+dau_mass.append(dau0_masss['GenJets_dau0_mass'][nonzero][leading]
+)
+
+dau1_masss=vbf_data['Events']['GenJets_dau1_mass'].arrays()
+dau_mass.append(dau1_masss['GenJets_dau1_mass'][nonzero][leading]
+)
+
+dau2_masss=vbf_data['Events']['GenJets_dau2_mass'].arrays()
+dau_mass.append(dau2_masss['GenJets_dau2_mass'][nonzero][leading]
+)
+
+dau3_masss=vbf_data['Events']['GenJets_dau3_mass'].arrays()
+dau_mass.append(dau3_masss['GenJets_dau3_mass'][nonzero][leading]
+)
+
+dau4_masss=vbf_data['Events']['GenJets_dau4_mass'].arrays()
+dau_mass.append(dau4_masss['GenJets_dau4_mass'][nonzero][leading]
+)
+
+dau5_masss=vbf_data['Events']['GenJets_dau5_mass'].arrays()
+dau_mass.append(dau5_masss['GenJets_dau5_mass'][nonzero][leading]
+)
+
+dau6_masss=vbf_data['Events']['GenJets_dau6_mass'].arrays()
+dau_mass.append(dau6_masss['GenJets_dau6_mass'][nonzero][leading]
+)
+
+dau7_masss=vbf_data['Events']['GenJets_dau7_mass'].arrays()
+dau_mass.append(dau7_masss['GenJets_dau7_mass'][nonzero][leading]
+)
+
+dau8_masss=vbf_data['Events']['GenJets_dau8_mass'].arrays()
+dau_mass.append(dau8_masss['GenJets_dau8_mass'][nonzero][leading]
+)
+
+dau9_masss=vbf_data['Events']['GenJets_dau9_mass'].arrays()
+dau_mass.append(dau9_masss['GenJets_dau9_mass'][nonzero][leading]
+)
+
+dau10_masss=vbf_data['Events']['GenJets_dau10_mass'].arrays()
+dau_mass.append(dau10_masss['GenJets_dau10_mass'][nonzero][leading]
+)
+
+dau11_masss=vbf_data['Events']['GenJets_dau11_mass'].arrays()
+dau_mass.append(dau11_masss['GenJets_dau11_mass'][nonzero][leading]
+)
+
+dau12_masss=vbf_data['Events']['GenJets_dau12_mass'].arrays()
+dau_mass.append(dau12_masss['GenJets_dau12_mass'][nonzero][leading]
+)
+
+dau13_masss=vbf_data['Events']['GenJets_dau13_mass'].arrays()
+dau_mass.append(dau13_masss['GenJets_dau13_mass'][nonzero][leading]
+)
+
+dau14_masss=vbf_data['Events']['GenJets_dau14_mass'].arrays()
+dau_mass.append(dau14_masss['GenJets_dau14_mass'][nonzero][leading]
+)
+
+dau15_masss=vbf_data['Events']['GenJets_dau15_mass'].arrays()
+dau_mass.append(dau15_masss['GenJets_dau15_mass'][nonzero][leading]
+)
+
+dau16_masss=vbf_data['Events']['GenJets_dau16_mass'].arrays()
+dau_mass.append(dau16_masss['GenJets_dau16_mass'][nonzero][leading]
+)
+
+dau17_masss=vbf_data['Events']['GenJets_dau17_mass'].arrays()
+dau_mass.append(dau17_masss['GenJets_dau17_mass'][nonzero][leading]
+)
+
+dau18_masss=vbf_data['Events']['GenJets_dau18_mass'].arrays()
+dau_mass.append(dau18_masss['GenJets_dau18_mass'][nonzero][leading]
+)
+
+dau19_masss=vbf_data['Events']['GenJets_dau19_mass'].arrays()
+dau_mass.append(dau19_masss['GenJets_dau19_mass'][nonzero][leading]
+)
+
+dau20_masss=vbf_data['Events']['GenJets_dau20_mass'].arrays()
+dau_mass.append(dau20_masss['GenJets_dau20_mass'][nonzero][leading]
+)
+
+dau21_masss=vbf_data['Events']['GenJets_dau21_mass'].arrays()
+dau_mass.append(dau21_masss['GenJets_dau21_mass'][nonzero][leading]
+)
+
+dau22_masss=vbf_data['Events']['GenJets_dau22_mass'].arrays()
+dau_mass.append(dau22_masss['GenJets_dau22_mass'][nonzero][leading]
+)
+
+dau23_masss=vbf_data['Events']['GenJets_dau23_mass'].arrays()
+dau_mass.append(dau23_masss['GenJets_dau23_mass'][nonzero][leading]
+)
+
+dau24_masss=vbf_data['Events']['GenJets_dau24_mass'].arrays()
+dau_mass.append(dau24_masss['GenJets_dau24_mass'][nonzero][leading]
+)
+
+dau25_masss=vbf_data['Events']['GenJets_dau25_mass'].arrays()
+dau_mass.append(dau25_masss['GenJets_dau25_mass'][nonzero][leading]
+)
+
+dau26_masss=vbf_data['Events']['GenJets_dau26_mass'].arrays()
+dau_mass.append(dau26_masss['GenJets_dau26_mass'][nonzero][leading]
+)
+
+dau27_masss=vbf_data['Events']['GenJets_dau27_mass'].arrays()
+dau_mass.append(dau27_masss['GenJets_dau27_mass'][nonzero][leading]
+)
+
+dau28_masss=vbf_data['Events']['GenJets_dau28_mass'].arrays()
+dau_mass.append(dau28_masss['GenJets_dau28_mass'][nonzero][leading]
+)
+
+dau29_masss=vbf_data['Events']['GenJets_dau29_mass'].arrays()
+dau_mass.append(dau29_masss['GenJets_dau29_mass'][nonzero][leading]
+)
+
+dau30_masss=vbf_data['Events']['GenJets_dau30_mass'].arrays()
+dau_mass.append(dau30_masss['GenJets_dau30_mass'][nonzero][leading]
+)
+
+dau31_masss=vbf_data['Events']['GenJets_dau31_mass'].arrays()
+dau_mass.append(dau31_masss['GenJets_dau31_mass'][nonzero][leading]
+)
+
+
+
+
+
+#%%
+#Defining Delta eta and Delta phi
+
+r_eta=[]
+r_phi=[]
+r=[]        #is the vector (delta_eta,delta_phi)
+absr=[]      #The magnitude of ri
+r_phi_raw=[]
+prod_eta=[]      #Two useful shortcuts for finding the pull vector
+prod_phi=[]      #Two useful shortcuts for finding the pull vector
+
+
+#Be careful, the value of phi is in radians
+
+for i in range(32):
+    #the main problem that we encounter is that jets with fewer than 32 daughters register the pt of the missing as -1
+    ntrue_dau=dau_pt[i]==-1  #we define the mask that recognises the non existent daughters
+    
+    #in the lines that follow, we substitute the non existent daughters with zero as a value
+    dau_mask=ma.masked_array(dau_eta[i],mask=[ntrue_dau])
+    dau_eta_complete=dau_mask.filled(0)
+    
+    jet_mask=ma.masked_array(jet_eta,mask=[ntrue_dau])
+    jet_eta_complete=jet_mask.filled(0)
+    
+    dau_phi_mask=ma.masked_array(dau_phi[i],mask=[ntrue_dau]) 
+    dau_phi_complete=dau_phi_mask.filled(0)
+    
+    jet_phi_mask=ma.masked_array(jet_phi,mask=[ntrue_dau])
+    jet_phi_complete=jet_phi_mask.filled(0)
+    
+    dau_pt_mask=ma.masked_array(dau_pt[i],mask=[ntrue_dau])
+    dau_pt_complete=dau_pt_mask.filled(0)
+    
+    jet_mass_mask=ma.masked_array(jet_mass,mask=[ntrue_dau])
+    jet_mass_complete=jet_mass_mask.filled(0)
+    
+    dau_mass_mask=ma.masked_array(dau_mass[i],mask=[ntrue_dau])
+    dau_mass_complete=dau_mass_mask.filled(0)
+    
+    #in the following lines we calculate the jet rapidity 
+    f=(jet_mass_complete/jet_pt.to_numpy())**2    
+    y=np.log((np.sqrt(f+np.cosh(jet_eta_complete)**2)+np.sinh(jet_eta_complete))/np.sqrt(f+1))
+    #in the following lines we calculate the rapidities of the daughter particles
+    e=(dau_mass_complete/dau_pt[i])**2
+    dau_y=np.log((np.sqrt(e+np.cosh(dau_eta_complete)**2)+np.sinh(dau_eta_complete))/np.sqrt(e+1))
+    
+    
+    #r_eta.append(ak.flatten(np.subtract(dau_eta_complete,jet_eta_complete)))
+    #r_phi_raw.append(ak.flatten(np.subtract(dau_phi_complete,jet_phi_complete)))
+    #r_phi=np.arcsin(np.sin(r_phi_raw))
+    filtered_dau_pt=dau_pt_complete[filters]
+    filtered_jet_pt=jet_pt[filters]
+    filtered_dau_y=dau_y[filters]
+    filtered_jet_eta=y[filters]
+    filtered_dau_phi=dau_phi_complete[filters]
+    filtered_jet_phi=jet_phi_complete[filters]
+    
+    r.append(vector.array({
+        
+        "x" : np.subtract(filtered_dau_y.to_numpy(),filtered_jet_eta),
+        "y":  np.arcsin(np.sin(np.subtract(filtered_dau_phi,filtered_jet_phi)))
+        }))
+    
+    absr.append(r[i].rho)
+    prod_eta.append(filtered_dau_pt/filtered_jet_pt.to_numpy()*absr[i]*r[i].x)
+    prod_phi.append(filtered_dau_pt/filtered_jet_pt.to_numpy()*absr[i]*r[i].y)
+    
+    
+    
+
+
+#Pull vector projections
+#Eta projection
+t_eta=[]
+#Phi projection
+t_phi=[]
+
+t_eta=np.sum(prod_eta,axis=0).reshape(-1)
+t_phi=np.sum(prod_phi,axis=0).reshape(-1)
+t_vector=vector.array({
+                    "x" : t_eta,
+                    "y": t_phi
+                    
+                    })
+jeta=jet_eta[filters].to_numpy().reshape(-1)
+jphi=jet_phi[filters].to_numpy().reshape(-1)
+#uproot.create("pull_vector.root")
+file = uproot.recreate("vbf_pull_vector_subleading_filtered.root")
+file["pull_vector"]={"Eta": t_eta,"Phi": t_phi,"Jet_eta": jeta,"Jet_phi": jphi}
+
+
+
+#%%
+# def f():
+#     for i in range(32):
+#         plt.title(f'Daughter {i} Δφ distribution ')
+#         plt.hist(r_phi[i],bins=50)
+#         plt.xlabel('Δφ')
+#         plt.savefig(f'Delta_phi{i}.png',dpi=400)
+#         plt.show()
+        
+# def fun():
+#     for i in range(32):
+#         plt.title(f'Daughter {i} Δη distribution ')
+#         plt.hist(r_eta[i],bins=50)
+#         plt.xlabel('Δη')
+#         plt.savefig(f'Delta_eta{i}.png',dpi=400)
+#         plt.show()
+
+#%%
+
+
+
+
+
+finish=time.perf_counter()
+print(finish-start)
+
+
+
