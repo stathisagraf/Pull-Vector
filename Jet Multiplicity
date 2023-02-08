@@ -1,0 +1,30 @@
+import uproot
+import numpy as np
+import matplotlib.pyplot as plt
+import vector
+import awkward as ak
+
+#vbf data
+
+data1=uproot.open('perfNano_VBFHInv_PU200.l1ctlayer1.root')
+
+branches1=data1['Events']['nGenJets'].arrays()
+
+n_gen_jets1=branches1['nGenJets']
+
+#single neutrino data
+
+data2=uproot.open('perfNano_SingleNeutrino_PU200.l1ctlayer1.root')
+
+branches2=data2['Events']['nGenJets'].arrays()
+
+n_gen_jets2=branches2['nGenJets']
+
+print(n_gen_jets2)
+
+
+plt.hist([n_gen_jets1,n_gen_jets2],45,range=(0,45),histtype='step',label=['vbf data','single neutrino data'],density=True)
+plt.yscale('log')
+plt.legend()
+plt.plot()
+plt.savefig('jet_multiplicity_normalized_log',dpi=1200)
