@@ -1,0 +1,203 @@
+import uproot
+import numpy as np
+import awkward as ak
+import vector
+import matplotlib.pyplot as plt
+#pull vector
+data1=uproot.open("vbf_pull_vector_rapidity.root")
+eta1=data1['pull_vector']['Eta'].array().to_list()
+phi1=data1['pull_vector']['Phi'].array().to_list()
+vbf_leading=vector.array({
+                    "x" : eta1,
+                    "y": phi1
+                    
+                    })
+print('leading eta=',eta1[0])
+print('leading phi=',phi1[0])
+
+data2=uproot.open("vbf_pull_vector_subleading.root")
+eta2=data2['pull_vector']['Eta'].array().to_list()
+phi2=data2['pull_vector']['Phi'].array().to_list()
+vbf_subleading=vector.array({
+                    "x" : eta2,
+                    "y": phi2
+                    
+                    })
+print('subleading eta=',eta2[0])
+print('subleading phi=',phi2[0])
+
+data3=uproot.open("sn_pull_vector.root")
+eta3=data3['pull_vector']['Eta'].array().to_list()
+phi3=data3['pull_vector']['Phi'].array().to_list()
+sn_leading=vector.array({
+                    "x" : eta3,
+                    "y": phi3
+                    
+                    })
+
+data4=uproot.open("sn_pull_vector_subleading.root")
+eta4=data4['pull_vector']['Eta'].array().to_list()
+phi4=data4['pull_vector']['Phi'].array().to_list()
+sn_subleading=vector.array({
+                    "x" : eta4,
+                    "y": phi4
+                    
+                    })
+
+data5=uproot.open("qcd_pull_vector.root")
+eta5=data5['pull_vector']['Eta'].array().to_list()
+phi5=data5['pull_vector']['Phi'].array().to_list()
+qcd_leading=vector.array({
+                    "x" : eta5,
+                    "y": phi5
+                    
+                    })
+
+data6=uproot.open("qcd_pull_vector_subleading.root")
+eta6=data6['pull_vector']['Eta'].array().to_list()
+phi6=data6['pull_vector']['Phi'].array().to_list()
+qcd_subleading=vector.array({
+                    "x" : eta6,
+                    "y": phi6
+                    
+                    })
+#jets
+
+jeta1=data1['pull_vector']['Jet_eta'].array().to_list()
+jphi1=data1['pull_vector']['Jet_phi'].array().to_list()
+jvbf_leading=vector.array({
+                    "x" : jeta1,
+                    "y": jphi1
+                    
+                    })
+print('leading jet eta=',jeta1[0])
+print('leading jet phi=',jphi1[0])
+
+jeta2=data2['pull_vector']['Jet_eta'].array().to_list()
+jphi2=data2['pull_vector']['Jet_phi'].array().to_list()
+jvbf_subleading=vector.array({
+                    "x" : jeta2,
+                    "y": jphi2
+                    
+                    })
+print('subleading jet eta=', jeta2[0])
+print('subleading jet phi=', jphi2[0])
+
+jeta3=data3['pull_vector']['Jet_eta'].array().to_list()
+jphi3=data3['pull_vector']['Jet_phi'].array().to_list()
+jsn_leading=vector.array({
+                    "x" : jeta3,
+                    "y": jphi3
+                    
+                    })
+
+
+jeta4=data4['pull_vector']['Jet_eta'].array().to_list()
+jphi4=data4['pull_vector']['Jet_phi'].array().to_list()
+jsn_subleading=vector.array({
+                    "x" : jeta4,
+                    "y": jphi4
+                    
+                    })
+
+jeta5=data5['pull_vector']['Jet_eta'].array().to_list()
+jphi5=data5['pull_vector']['Jet_phi'].array().to_list()
+jqcd_leading=vector.array({
+                    "x" : jeta5,
+                    "y": jphi5
+                    
+                    })
+
+
+jeta6=data6['pull_vector']['Jet_eta'].array().to_list()
+jphi6=data6['pull_vector']['Jet_phi'].array().to_list()
+jqcd_subleading=vector.array({
+                    "x" : jeta6,
+                    "y": jphi6
+                    
+                    })
+#1 is for the leading jet
+#2 is for the subleading
+
+
+
+v12_vbf=(jvbf_subleading-jvbf_leading)
+v21_vbf=(jvbf_leading-jvbf_subleading)
+
+v12_sn=(jsn_subleading-jsn_leading)
+v21_sn=(jsn_leading-jsn_subleading)
+
+v12_qcd=(jqcd_subleading-jqcd_leading)
+v21_qcd=(jqcd_leading-jqcd_subleading)
+
+v12_vbf_angle=v12_vbf.phi
+v21_vbf_angle=v21_vbf.phi
+
+v12_sn_angle=v12_sn.phi
+v21_sn_angle=v21_sn.phi
+
+v12_qcd_angle=v12_qcd.phi
+v21_qcd_angle=v21_qcd.phi
+
+leading_pangle_vbf=vbf_leading.phi
+subleading_pangle_vbf=vbf_subleading.phi
+
+leading_pangle_sn=sn_leading.phi
+subleading_pangle_sn=sn_subleading.phi
+
+leading_pangle_qcd=qcd_leading.phi
+subleading_pangle_qcd=qcd_subleading.phi
+
+# plt.title('Pull angle of leading jets')
+# plt.xlabel('Pull angle (rad)')
+
+# plt.hist(leading_pangle_vbf,bins=100,density=True,histtype='step',label='VBF')
+# plt.hist(leading_pangle_sn,bins=100,density=True,histtype='step',label='SN')
+# plt.legend(loc='center')
+# plt.savefig('pull_angle_vbf_leading', dpi=600)
+# plt.show()
+
+# plt.title('Pull angle of subleading jets')
+# plt.xlabel('Pull angle (rad)')
+
+# plt.hist(subleading_pangle_vbf,bins=100,density=True,histtype='step',label='VBF')
+# plt.hist(subleading_pangle_sn,bins=100,density=True,histtype='step',label='SN')
+# plt.legend(loc='center')
+# plt.savefig('pull_angle_vbf_subleading', dpi=600)
+# plt.show()
+
+# plt.title('Relative angle of jets (starting from leading)')
+# plt.xlabel('Relative angle (rad)')
+
+# plt.hist(abs(v12_vbf_angle),bins=100,density=True,histtype='step',label='VBF')
+# plt.hist(abs(v12_sn_angle),bins=100,density=True,histtype='step',label='SN')
+# plt.legend(loc='upper center')
+# plt.savefig('relative_angle_vbf_leading', dpi=600)
+# plt.show()
+
+# plt.title('Relative angle of jets (starting from subleading)')
+# plt.xlabel('Relative angle (rad)')
+
+# plt.hist(v21_vbf_angle,bins=100,density=True,histtype='step',label='VBF')
+# plt.hist(v21_sn_angle,bins=100,density=True,histtype='step',label='SN')
+# plt.legend()
+# plt.savefig('relative_angle_vbf_subleading', dpi=600)
+# plt.show()
+
+
+vbf_leading_relative_pa=v12_vbf.deltaphi(vbf_leading)
+vbf_subleading_relative_pa=v21_vbf.deltaphi(vbf_subleading)
+sn_leading_relative_pa=v12_sn.deltaphi(sn_leading)
+sn_subleading_relative_pa=v21_sn.deltaphi(sn_subleading)
+qcd_leading_relative_pa=v12_qcd.deltaphi(qcd_leading)
+qcd_subleading_relative_pa=v21_qcd.deltaphi(qcd_subleading)
+
+print('leading relative pa=',vbf_leading_relative_pa[0])
+print('subleading relative pa=',vbf_subleading_relative_pa[0])
+plt.hist([vbf_leading_relative_pa,vbf_subleading_relative_pa,sn_leading_relative_pa,sn_subleading_relative_pa,qcd_leading_relative_pa,qcd_subleading_relative_pa],bins=100,histtype='step', label=['Signal leading', 'Signal subleading', 'Sn Background leading','Sn Background subleading','QCD Background leading','QCD Background Subleading'])
+plt.title('Relative Pull Angle')
+plt.legend(loc='lower right',fancybox=True,framealpha=0.5)
+plt.xlabel('Relative Pull Angle')
+
+plt.savefig('relative_pull_angle.png', dpi=600)
+
