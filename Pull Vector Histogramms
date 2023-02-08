@@ -1,0 +1,30 @@
+import uproot
+import numpy as np
+import awkward as ak
+import matplotlib.pyplot as plt
+
+data1=uproot.open("vbf_pull_vector.root")
+eta1=data1['pull_vector']['Eta'].array().to_list()
+phi1=data1['pull_vector']['Phi'].array().to_list()
+
+data2=uproot.open("sn_pull_vector.root")
+eta2=data2['pull_vector']['Eta'].array().to_list()
+phi2=data2['pull_vector']['Phi'].array().to_list()
+
+plt.title('Pull vector η projection')
+plt.hist(eta1,bins=100,histtype='step',label='vbf eta',density=True,zorder=10)
+plt.hist(eta2,bins=100,histtype='step',label='sn eta',density=True,zorder=20)
+plt.legend()
+plt.xlabel('η',loc='right')
+plt.grid(zorder=0)
+plt.savefig('pull_vector_eta.png',dpi=600,bbox_inches='tight')
+plt.show()
+
+plt.title('Pull vector φ projection')
+plt.hist(phi1,bins=100,histtype='step',label='vbf phi',range=(-np.pi,np.pi),density=True,zorder=10)
+plt.hist(phi2,bins=100,histtype='step',label='sn phi',range=(-np.pi,np.pi),density=True,zorder=20)
+plt.legend()
+plt.grid(zorder=0)
+plt.xlabel('φ (rad)',loc='right')
+plt.savefig('pull_vector_phi.png',dpi=600,bbox_inches='tight')
+plt.show()
